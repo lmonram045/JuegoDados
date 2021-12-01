@@ -3,65 +3,56 @@ package org.iesalandalus.programacion.juegodados;
 import java.util.Arrays;
 
 public class JuegoDados {
-
 	private static final int MIN_JUGADORES = 2;
 	private static final int MAX_JUGADORES = 10;
-	
-	private Jugador[] jugadores;
-	
-	public JuegoDados(int numeroJugadores) {
-		comprobarNumeroJugadoresValido(numeroJugadores);
-		jugadores = new Jugador[numeroJugadores];
+	private static Jugador[] jugadores;
+
+	public JuegoDados(int numJugadores) {
+			comprobarNumeroJugadoresValido(numJugadores);
 	}
-	
-	private void comprobarNumeroJugadoresValido(int numeroJugadores) {
-		if (numeroJugadores < MIN_JUGADORES || numeroJugadores > MAX_JUGADORES) {
-			throw new IllegalArgumentException("El número de jugadores no es válido (" + 
-					MIN_JUGADORES + "-" + MAX_JUGADORES + ").");
-		}
+
+	private void comprobarNumeroJugadoresValido(int numJugadores) {
+		if (numJugadores < MIN_JUGADORES || numJugadores > MAX_JUGADORES)
+			throw new IllegalArgumentException("ERROR: El numero de jugadores debe estar entre 2 y 10 (incluidos)");
 	}
-	
-	public Jugador getJugador(int numeroJugador) {
-		comprobarNumeroJugadorValido(numeroJugador);
-		return jugadores[numeroJugador];
+
+	public Jugador getJugador(int numJugador) {
+		if (numJugador >= jugadores.length)
+			throw new IllegalArgumentException("ERROR: El numero de jugador no existe");
+		else
+			return jugadores[numJugador];
 	}
-	
-	private void comprobarNumeroJugadorValido(int numeroJugador) {
-		if (numeroJugador < 0 || numeroJugador >= jugadores.length) {
-			throw new IllegalArgumentException("El número de jugador no es válido.");
-		}
+
+	private void comprobarNumeroJugadorValido(int numJugador) {
+		if (numJugador >= jugadores.length)
+			throw new IllegalArgumentException("ERROR: El numero de jugador no existe");
 	}
-	
-	public void setJugador(int numeroJugador, String nombre) {
-		comprobarNumeroJugadorValido(numeroJugador);
-		jugadores[numeroJugador] = new Jugador(nombre);
+
+	public void setJugador(int numJugador, String nombreJugador) {
+		comprobarNumeroJugadorValido(numJugador);
+		jugadores[numJugador] = new Jugador(nombreJugador);
 	}
-	
+
 	public void jugar() {
 		for (Jugador jugador : jugadores) {
 			jugador.jugar();
 		}
 	}
-	
+
 	public int getPuntuacionGanadora() {
-		int puntuacionMaxima = 0;
+		int puntuacionGanadora = 0;
 		for (Jugador jugador : jugadores) {
-			int puntuacionJugador = jugador.getPuntuacionTotal();
-			if (puntuacionJugador > puntuacionMaxima) {
-				puntuacionMaxima = puntuacionJugador;
-			}
+			if (jugador.getPuntuacionTotal() > puntuacionGanadora)
+				puntuacionGanadora = jugador.getPuntuacionTotal();
 		}
-		return puntuacionMaxima;
+		return puntuacionGanadora;
 	}
-	
+
 	public Jugador[] getGanadores() {
 		Jugador[] ganadores = new Jugador[jugadores.length];
-		int puntuacionGanadora = getPuntuacionGanadora();
-		int indiceGanadores = 0;
-		for (Jugador jugador : jugadores) {
-			if (jugador.getPuntuacionTotal() == puntuacionGanadora) {
-				ganadores[indiceGanadores++] = jugador;
-			}
+		for (int i = 0; i < jugadores.length; i++) {
+			if (jugadores[i].getPuntuacionTotal() == getPuntuacionGanadora())
+				ganadores[i] = jugadores[i];
 		}
 		return ganadores;
 	}
@@ -84,6 +75,4 @@ public class JuegoDados {
 		resultados += String.format("Ganadores: %s", ganadores);
 		return resultados;
 	}
-	
-	
 }
